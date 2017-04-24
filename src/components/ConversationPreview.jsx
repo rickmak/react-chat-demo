@@ -46,7 +46,7 @@ export default class ConversationPreview extends React.Component {
       selected,
       onClick,
     } = this.props;
-    const {
+    let {
       unread_count
     } = this.props.userConversation;
     const {
@@ -54,6 +54,9 @@ export default class ConversationPreview extends React.Component {
       imageURL
     } = this.state;
     const lastMessage = this.props.conversation.$transient.last_message;
+    if (selected) {
+      unread_count = 0;
+    }
 
     return (
       <div

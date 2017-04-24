@@ -153,8 +153,8 @@ export default class ManagedMessageList {
     const {_messages} = this;
     if (!_messages.hasOwnProperty(message._id)) {
       _messages[message._id] = message;
-      this._messagesUpdated();
-      if (this._autoRead) {
+        this._messagesUpdated();
+        if (this._autoRead) {
         skygearChat.markAsLastMessageRead(this._conversation, message);
       }
     }

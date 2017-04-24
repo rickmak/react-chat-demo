@@ -45,18 +45,27 @@ export default class App extends React.Component {
   }
 
   updateUnreadCount() {
+    const {
+      activeID
+    } = this.state;
+    const activeUC = this.userConversationList.get(activeID);
     skygearChat.getUnreadCount().then(result => {
+      // FIXME: activeUC count is always reset to zero for async.
+      if (activeUC) {
+        result.message = result.message - activeUC.unread_count;
+        activeUC.unread_count = 0;
+      }
       this.setState({unreadCount: result.message});
     });
   }
 
   selectConversation(userConversation) {
+    const unread_count = userConversation.unread_count;
+    userConversation.unread_count = 0;
     this.setState({
       activeID: userConversation._id,
-      unreadCount: this.state.unreadCount - userConversation.unread_count
+      unreadCount: this.state.unreadCount - unread_count
     });
-    userConversation.unread_count = 0;
-    this.updateUnreadCount();
   }
 
   render() {
@@ -100,7 +109,7 @@ export default class App extends React.Component {
                   return <ConversationPreview
                     key={'ConversationPreview-' + uc.id + uc.updatedAt}
                     selected={
-                      uc.id === activeID}
+                      uc._id === activeID}
                     userConversation={uc}
                     conversation={uc.$transient.conversation}
                     onClick={() => this.selectConversation(uc)}/>
